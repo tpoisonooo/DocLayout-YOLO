@@ -2,13 +2,16 @@ import os
 import cv2
 import torch
 import argparse
+import time
 from doclayout_yolo import YOLOv10
 
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', default=None, required=True, type=str)
-    parser.add_argument('--image-path', default=None, required=True, type=str)
+    # parser.add_argument('--model', default='/data/khj/workspace/DocLayout-YOLO/docstruct-onnx/model.engine', type=str)
+    parser.add_argument('--model', default='/data/khj/workspace/DocLayout-YOLO/weight/model.pt', type=str)
+
+    parser.add_argument('--image-path', default='/data/khj/workspace/DocLayout-YOLO/assets/example/academic.jpg',  type=str)
     parser.add_argument('--res-path', default='outputs', required=False, type=str)
     parser.add_argument('--imgsz', default=1024, required=False, type=int)
     parser.add_argument('--line-width', default=5, required=False, type=int)
@@ -21,13 +24,25 @@ if __name__ == "__main__":
     print(f"Using device: {device}")
 
     model = YOLOv10(args.model)  # load an official model
-
     det_res = model.predict(
         args.image_path,
         imgsz=args.imgsz,
         conf=args.conf,
         device=device,
     )
+
+    loop = 32
+    begin = time.time()
+    for i in range(loop):
+        det_res = model.predict(
+            args.image_path,
+            imgsz=args.imgsz,
+            conf=args.conf,
+            device=device,
+        )
+    end = time.time()
+    print(f"Inference time: {(end - begin) / loop:.4f} seconds")
+
     annotated_frame = det_res[0].plot(pil=True, line_width=args.line_width, font_size=args.font_size)
     if not os.path.exists(args.res_path):
         os.makedirs(args.res_path)

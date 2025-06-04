@@ -8,7 +8,7 @@ from huggingface_hub import PyTorchModelHubMixin
 
 class YOLOv10(Model, PyTorchModelHubMixin, repo_url="https://github.com/opendatalab/DocLayout-YOLO", pipeline_tag="object-detection", license="agpl-3.0"):
 
-    def __init__(self, model="yolov10n.pt", task=None, verbose=False):
+    def __init__(self, model="yolov10n.pt", task=None, verbose=True):
         super().__init__(model=model, task=task, verbose=verbose)
 
     @property

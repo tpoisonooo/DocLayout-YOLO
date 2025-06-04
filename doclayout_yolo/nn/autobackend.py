@@ -409,6 +409,8 @@ class AutoBackend(nn.Module):
         Returns:
             (tuple): Tuple containing the raw output tensor, and processed output for visualization (if visualize=True)
         """
+        # import pdb
+        # pdb.set_trace()
         b, ch, h, w = im.shape  # batch, channel, height, width
         if self.fp16 and im.dtype != torch.float16:
             im = im.half()  # to FP16
@@ -460,6 +462,8 @@ class AutoBackend(nn.Module):
 
         # TensorRT
         elif self.engine:
+            # import pdb
+            # pdb.set_trace()
             if self.dynamic and im.shape != self.bindings["images"].shape:
                 i = self.model.get_binding_index("images")
                 self.context.set_binding_shape(i, im.shape)  # reshape if dynamic
