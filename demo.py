@@ -5,13 +5,12 @@ import argparse
 import time
 from doclayout_yolo import YOLOv10
 
-if __name__ == "__main__":
-    
+if __name__ == "__main__":    
     parser = argparse.ArgumentParser()
     # parser.add_argument('--model', default='/data/khj/workspace/DocLayout-YOLO/docstruct-onnx/model.engine', type=str)
-    parser.add_argument('--model', default='/data/khj/workspace/DocLayout-YOLO/weight/model.pt', type=str)
+    parser.add_argument('--model', default='/workspace/DocLayout-YOLO/weight/model.engine', type=str)
 
-    parser.add_argument('--image-path', default='/data/khj/workspace/DocLayout-YOLO/assets/example/academic.jpg',  type=str)
+    parser.add_argument('--image-path', default='/workspace/DocLayout-YOLO/assets/example/academic.jpg',  type=str)
     parser.add_argument('--res-path', default='outputs', required=False, type=str)
     parser.add_argument('--imgsz', default=1024, required=False, type=int)
     parser.add_argument('--line-width', default=5, required=False, type=int)
@@ -31,7 +30,7 @@ if __name__ == "__main__":
         device=device,
     )
 
-    loop = 32
+    loop = 16
     begin = time.time()
     for i in range(loop):
         det_res = model.predict(
