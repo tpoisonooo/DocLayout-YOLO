@@ -486,11 +486,10 @@ class AutoBackend(nn.Module):
             import tensorrt as trt
             if int(trt.__version__[0]) != 8:
                 if self.dynamic and im.shape != self.bindings["images"].shape:
-                    self.context.set_tensor_shape("images", im.shape)  # reshape if dynamic
+                    self.context.set_input_shape("images", im.shape)  # reshape if dynamic
                     self.bindings["images"] = self.bindings["images"]._replace(shape=im.shape)
                     for name in self.output_names:
-                        i = self.model.get_binding_index(name)
-                        self.bindings[name].data.resize_(tuple(self.context.get_binding_shape(i)))
+                        self.bindings[name].data.resize_(tuple(self.context.get_tensor_shape(name)))
                 s = self.bindings["images"].shape
                 assert im.shape == s, f"input size {im.shape} {'>' if self.dynamic else 'not equal to'} max model size {s}"
                 self.binding_addrs["images"] = int(im.data_ptr())

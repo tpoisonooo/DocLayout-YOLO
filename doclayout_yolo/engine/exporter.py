@@ -702,8 +702,9 @@ class Exporter:
             if shape[0] <= 1:
                 LOGGER.warning(f"{prefix} WARNING ⚠️ 'dynamic=True' model requires max batch size, i.e. 'batch=16'")
             profile = builder.create_optimization_profile()
-            for inp in inputs:
-                profile.set_shape(inp.name, (1, *shape[1:]), (max(1, shape[0] // 2), *shape[1:]), shape)
+            profile.set_shape('images', min=[1,3,256,256], opt=[1,3,1024,768], max=[8,3,2048,2048])
+            # for inp in inputs:
+            #     profile.set_shape(inp.name, (1, *shape[1:]), (max(1, shape[0] // 2), *shape[1:]), shape)
             config.add_optimization_profile(profile)
 
         LOGGER.info(
@@ -711,7 +712,7 @@ class Exporter:
         )
         if builder.platform_has_fast_fp16 and self.args.half:
             config.set_flag(trt.BuilderFlag.FP16)
-
+        config.hardware_compatibility_level=trt.HardwareCompatibilityLevel.AMPERE_PLUS
         del self.model
         torch.cuda.empty_cache()
 

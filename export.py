@@ -1,7 +1,9 @@
 from doclayout_yolo import YOLOv10
 model=YOLOv10("/workspace/DocLayout-YOLO/weight/model.pt")
-model.export(format='engine', half=True)
-# model.export(format='engine', half=True, dynamic=True, dynamic_shape=(1, 3, 1024, 1024), output_path='model.engine')
+# model.export(format='engine', half=True)
+model.export(format='engine', half=True, dynamic=True)
+
+# dynamic_shape=(1, 3, 1024, 1024), 
 
 # import torch
 # from doclayout_yolo import YOLOv10
